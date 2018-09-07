@@ -1,3 +1,13 @@
-#map {
+body {
   background-color: black;
+  margin: 0;
+}
+
+#grid {
+  background-color: darkslateblue;
+  overflow: scroll;
+}
+
+#grid td {
+  background-color: lightgrey;
 }
