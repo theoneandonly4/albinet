@@ -1,13 +1,26 @@
-body {
+ body {
   background-color: black;
   margin: 0;
 }
 
 #grid {
-  background-color: darkslateblue;
+  background-color: teal;
   overflow: scroll;
 }
 
 #grid td {
   background-color: lightgrey;
+  border-radius: 8px;
+}
+
+#grid td.input {
+  background-color: lightgreen;
+}
+
+#grid td.output {
+  background-color: red;
+}
+
+#grid td.focus {
+  background-color: lightskyblue;
 }

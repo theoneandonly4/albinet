@@ -1,4 +1,4 @@
-function init() {
+function grid() {
   //Remove Context Menu default behavior (right click)
   document.body.addEventListener('contextmenu', function(e) {
     e.preventDefault()
@@ -6,7 +6,7 @@ function init() {
   })
 
   //Grid size
-  var gridLines = 1
+  var gridLines = 9
   var gridCols = 9
 
   //Update body and cell size depending on window size
@@ -40,13 +40,82 @@ function init() {
 
     grid.appendChild(row)
   }
-
   document.body.appendChild(grid)
+  var input = document.getElementById('c(0,0)')
+  input.classList.add('input')
+  var output = document.getElementById('c(' + (gridLines - 1) + ',' + (gridCols - 1) + ')')
+  output.classList.add('output')
 }
 
 function cellClick(e) {
-  console.log(e.button)
-  console.log(e.target.id)
+  var grid = document.getElementById('grid')
+  var focus = document.getElementsByClassName('focus')
+  var cell = document.getElementById(e.target.id)
+  var cp = document.getElementById('cp')
+  var i
+  var empty = true
+  if(localStorage.cont) {
+    for (i = 0; i < localStorage.cont.length; i++) {
+      if (localStorage.cont[i].id = e.target.id) {
+        empty = false
+        break
+      }
+    }
+  }
+  if (cp != null) {
+    switch (e.button) {
+      case 0:
+        if (empty) {
+          // TODO: paste
+        }
+        break;
+      case 1:
+      case 2:
+      grid.removeChild(cp)
+        break;
+    }
+  }
+  else if (empty) {
+    switch (e.button) {
+      case 1:
+      break;
+      case 2:
+        var menu = document.createElement('table')
+        menu.id = 'menu'
+        // TODO: Position absolute use e.client X/Y
+        grid.appendChild(menu)
+        console.log(e)
+        fmenu(0)
+      case 0:
+      default:
+      if (focus.length == 1) {
+        focus[0].classList.remove('focus')
+      }
+      cell.classList.add('focus')
+    }
+  }
+  else {
+    switch (e.button) {
+      case 0:
+      case 2:
+        break;
+      case 1:
+        // TODO: copy
+        break;
+    }
+  }
 }
 
-init()
+function fmenu(level) {
+
+  switch (level) {
+    case 0:
+
+      break;
+    default:
+
+  }
+
+}
+
+grid()
