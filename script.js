@@ -1,3 +1,34 @@
+//Object Constructors
+function Element(prt,id,typ,ttl) {
+  this.prt = prt
+  this.id = id
+  this.typ = typ
+  this.ttl = ttl
+}
+
+//Execution
+main()
+
+//Main function
+function main() {
+  init()
+  grid()
+  disp()
+}
+
+//Environment Variables initialization function
+function init() {
+  if (!localStorage.env) {
+    env = {prt: 'main'}
+    localStorage.env = JSON.stringify(env)
+  }
+  if (!localStorage.cont) {
+    cont = []
+    localStorage.cont = JSON.stringify(cont)
+  }
+}
+
+//Grid creation function
 function grid() {
   //Remove Context Menu default behavior (right click)
   document.body.addEventListener('contextmenu', function(e) {
@@ -34,6 +65,12 @@ function grid() {
       cell.id = 'c(' + i + ',' + j + ')'
       cell.style.width = cellSide + 'px'
       cell.style.height = cellSide + 'px'
+      if(j == 0) {
+        cell.classList.add('input')
+      }
+      if (j == gridCols - 1) {
+        cell.classList.add('output')
+      }
       cell.addEventListener('mouseup', cellClick)
       row.appendChild(cell)
     }
@@ -41,25 +78,38 @@ function grid() {
     grid.appendChild(row)
   }
   document.body.appendChild(grid)
-  var input = document.getElementById('c(0,0)')
-  input.classList.add('input')
-  var output = document.getElementById('c(' + (gridLines - 1) + ',' + (gridCols - 1) + ')')
-  output.classList.add('output')
 }
 
+//Display existing Elements from localStorage function
+function disp() {
+  var cont = JSON.parse(localStorage.cont)
+  var i
+  for (i = 0; i < cont.length; i++) {
+    disEl(cont[i])
+  }
+}
+
+//Clicks in Grid function
 function cellClick(e) {
+  var cont = JSON.parse(localStorage.cont)
   var grid = document.getElementById('grid')
   var focus = document.getElementsByClassName('focus')
-  var cell = document.getElementById(e.target.id)
+
+  if (e.target.localName == 'td'){
+    var cell = document.getElementById(e.target.id)
+  }
+  else {
+    return false
+  }
+
   var cp = document.getElementById('cp')
+
   var i
   var empty = true
-  if(localStorage.cont) {
-    for (i = 0; i < localStorage.cont.length; i++) {
-      if (localStorage.cont[i].id = e.target.id) {
-        empty = false
-        break
-      }
+  for (i = 0; i < cont.length; i++) {
+    if (cont[i].id == e.target.id) {
+      empty = false
+      break
     }
   }
   if (cp != null) {
@@ -78,15 +128,10 @@ function cellClick(e) {
   else if (empty) {
     switch (e.button) {
       case 1:
-      break;
-      case 2:
-        var menu = document.createElement('table')
-        menu.id = 'menu'
-        // TODO: Position absolute use e.client X/Y
-        grid.appendChild(menu)
-        console.log(e)
-        fmenu(0)
+        break;
       case 0:
+        creEl(e.target.id)
+      case 2:
       default:
       if (focus.length == 1) {
         focus[0].classList.remove('focus')
@@ -106,16 +151,29 @@ function cellClick(e) {
   }
 }
 
-function fmenu(level) {
-
-  switch (level) {
-    case 0:
-
-      break;
-    default:
-
-  }
-
+//Item Creation in localStorage function
+function creEl(elId) {
+  var env = JSON.parse(localStorage.env)
+  var cont = JSON.parse(localStorage.cont)
+  elItm = new Element(env.prt, elId, 'none', 'New El')
+  cont.push(elItm)
+  localStorage.cont = JSON.stringify(cont)
+  //Item Display
+  disEl(elItm)
 }
 
-grid()
+//Element display in Cell function
+function disEl(elItm) {
+  var el = document.getElementById(elItm.id)
+  var p = document.createElement('p')
+  var img = document.createElement('img')
+  var imgFile
+  if (elItm.typ == 'none') {
+    imgFile = 'Knob-Help.ico'
+  }
+  p.id = 'title'
+  p.innerHTML = elItm.ttl
+  el.appendChild(p)
+  img.setAttribute('src', './src/img/' + imgFile)
+  el.appendChild(img)
+}

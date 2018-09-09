@@ -11,6 +11,10 @@
 #grid td {
   background-color: lightgrey;
   border-radius: 8px;
+  max-width: 50px;
+  max-height: 50px;
+  min-width: 50px;
+  min-height: 50px;
 }
 
 #grid td.input {
@@ -23,4 +27,14 @@
 
 #grid td.focus {
   background-color: lightskyblue;
+}
+
+#grid td #title {
+  font-size: 10px;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+#grid td img {
+  margin: 0 auto;
 }
