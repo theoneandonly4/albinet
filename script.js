@@ -168,12 +168,27 @@ function disEl(elItm) {
   var p = document.createElement('p')
   var img = document.createElement('img')
   var imgFile
+  var inp = document.createElement('img')
+  var out = document.createElement('img')
   if (elItm.typ == 'none') {
     imgFile = 'Knob-Help.ico'
   }
   p.id = 'title'
   p.innerHTML = elItm.ttl
+  p.addEventListener('mouseup', ttl)
   el.appendChild(p)
+  inp.setAttribute('src', './src/img/Knob-Green.ico')
+  inp.style.width = '8px'
+  inp.style.height = '8px'
+  el.appendChild(inp)
   img.setAttribute('src', './src/img/' + imgFile)
   el.appendChild(img)
+  out.setAttribute('src', './src/img/Knob-Red.ico')
+  out.style.width = '8px'
+  out.style.height = '8px'
+  el.appendChild(out)
+}
+
+function ttl() {
+  console.log('ok')
 }
