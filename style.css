@@ -12,8 +12,8 @@
   background-color: lightgrey;
   border-radius: 8px;
   max-width: 50px;
-  max-height: 50px;
   min-width: 50px;
+  max-height: 50px;
   min-height: 50px;
 }
 
@@ -37,4 +37,9 @@
 
 #grid td img {
   margin: 0 auto;
+}
+
+#grid #ttlWin {
+  background-color: lightblue;
+  border-radius: 8px;
 }

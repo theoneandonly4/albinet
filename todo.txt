@@ -1,0 +1,22 @@
+albinet Project tasks
+TODO> Create DataBase
+TODO> Create CRUD API
+TODO> Get User Session Cookies
+TODO> Get User Data from Upload of Local file
+TODO> Get User Data from DataBase
+TODO> Get User Last Session Status from DB
+TODO> Restore Session if exists
+Done> Initialization of Local Storage (keep, set empty or from DB)
+Done> Grid Display
+TODO> Get Elements from DataBase
+Done> Get Elements from Local Storage
+Done> Display Elements from Local Storage
+Done> Create New Elements
+TODO> Edit Element Title Data
+TODO> Edit Element Type
+TODO> Edit Element Links
+TODO> Move Element
+TODO> Copy Paste Element (already positioned in code)
+TODO> Local Storage to JSON format
+TODO> Save JSON to Local File
+TODO> Save JSON to DataBase

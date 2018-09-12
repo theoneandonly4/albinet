@@ -1,7 +1,7 @@
 //Object Constructors
 function Element(prt,id,typ,ttl) {
   this.prt = prt
-  this.id = id
+  this.id =  id
   this.typ = typ
   this.ttl = ttl
 }
@@ -41,11 +41,11 @@ function grid() {
   var gridCols = 9
 
   //Update body and cell size depending on window size
-  var width = window.innerWidth
+  var width =  window.innerWidth
   var height = window.innerHeight
 
   cellSide = 50
-  document.body.style.width = cellSide * gridCols + 'px'
+  document.body.style.width =  cellSide * gridCols + 'px'
   document.body.style.height = cellSide * gridLines + 'px'
 
   //Generate Grid
@@ -57,13 +57,13 @@ function grid() {
   var i, j
   for (i = 0; i < gridLines; i++) {
     var row = document.createElement('tr')
-    row.style.width = cellSide * gridCols  + 'px'
+    row.style.width =  cellSide * gridCols  + 'px'
     row.style.height = cellSide + 'px'
 
     for (j = 0; j < gridCols; j++) {
       var cell = document.createElement('td')
       cell.id = 'c(' + i + ',' + j + ')'
-      cell.style.width = cellSide + 'px'
+      cell.style.width =  cellSide + 'px'
       cell.style.height = cellSide + 'px'
       if(j == 0) {
         cell.classList.add('input')
@@ -91,8 +91,8 @@ function disp() {
 
 //Clicks in Grid function
 function cellClick(e) {
-  var cont = JSON.parse(localStorage.cont)
-  var grid = document.getElementById('grid')
+  var cont =  JSON.parse(localStorage.cont)
+  var grid =  document.getElementById('grid')
   var focus = document.getElementsByClassName('focus')
 
   if (e.target.localName == 'td'){
@@ -153,19 +153,21 @@ function cellClick(e) {
 
 //Item Creation in localStorage function
 function creEl(elId) {
-  var env = JSON.parse(localStorage.env)
-  var cont = JSON.parse(localStorage.cont)
-  elItm = new Element(env.prt, elId, 'none', 'New El')
+  var env =   JSON.parse(localStorage.env)
+  var cont =  JSON.parse(localStorage.cont)
+  var elItm = new Element(env.prt, elId, 'none', 'New El')
+
   cont.push(elItm)
   localStorage.cont = JSON.stringify(cont)
+
   //Item Display
   disEl(elItm)
 }
 
 //Element display in Cell function
 function disEl(elItm) {
-  var el = document.getElementById(elItm.id)
-  var p = document.createElement('p')
+  var el =  document.getElementById(elItm.id)
+  var p =   document.createElement('p')
   var img = document.createElement('img')
   var imgFile
   var inp = document.createElement('img')
@@ -173,22 +175,68 @@ function disEl(elItm) {
   if (elItm.typ == 'none') {
     imgFile = 'Knob-Help.ico'
   }
-  p.id = 'title'
+
+  p.id =        'title'
   p.innerHTML = elItm.ttl
   p.addEventListener('mouseup', ttl)
-  el.appendChild(p)
+
   inp.setAttribute('src', './src/img/Knob-Green.ico')
-  inp.style.width = '8px'
+  inp.style.width =  '8px'
   inp.style.height = '8px'
-  el.appendChild(inp)
+
   img.setAttribute('src', './src/img/' + imgFile)
-  el.appendChild(img)
+
   out.setAttribute('src', './src/img/Knob-Red.ico')
-  out.style.width = '8px'
+  out.style.width =  '8px'
   out.style.height = '8px'
+
+  el.appendChild(p)
+  el.appendChild(inp)
+  el.appendChild(img)
   el.appendChild(out)
 }
 
-function ttl() {
-  console.log('ok')
+function ttl(e) {
+  var grid = document.getElementById('grid')
+
+  //Remove existing title edition window if it already exists
+  var prevTtlWin = document.getElementById('ttlWin')
+  if (prevTtlWin != null) {
+    grid.removeChild(prevTtlWin)
+  }
+
+  var el =          document.getElementById(e.target.parentNode.id)
+  var rect =        el.getBoundingClientRect()
+  var ttlWin =      document.createElement('div')
+  var lblShTtl =    document.createElement('label')
+  var lblShTtlTxt = document.createTextNode('Short Title')
+  var shTtl =       document.createElement('input')
+  var lblLgTtl =    document.createElement('label')
+  var lblLgTtlTxt = document.createTextNode('Short Title')
+  var lgTtl =       document.createElement('input')
+
+  ttlWin.id =             'ttlWin'
+  ttlWin.style.position = 'absolute'
+  ttlWin.style.top =      rect.top + 'px'
+  ttlWin.style.left =     rect.left + 'px'
+
+  lblShTtl.setAttribute('for', 'shTtl')
+
+  shTtl.id =         'shTtl'
+  shTtl.setAttribute('type', 'text')
+  shTtl.setAttribute('name', 'shTtl')
+  shTtl.setAttribute('size', '6')
+  shTtl.setAttribute('maxlength', '6')
+  shTtl.addEventListener('keypress', formKey)
+
+  lblShTtl.appendChild(lblShTtlTxt)
+  ttlWin.appendChild(lblShTtl)
+  ttlWin.appendChild(shTtl)
+
+
+  grid.appendChild(ttlWin)
+}
+
+function formKey(e) {
+  console.log(e)
 }
