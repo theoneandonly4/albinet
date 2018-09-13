@@ -180,7 +180,7 @@ function disEl(elItm) {
     imgFile = 'Knob-Help.ico'
   }
 
-  p.id =        'title'
+  p.classList.add('title')
   p.innerHTML = elItm.shTtl
   p.addEventListener('mouseup', ttl)
 
@@ -188,7 +188,7 @@ function disEl(elItm) {
   inp.style.width =  '8px'
   inp.style.height = '8px'
 
-  typ.id = 'typ'
+  typ.classList.add('typ')
   typ.setAttribute('src', './src/img/' + imgFile)
 
   out.setAttribute('src', './src/img/Knob-Green.ico')
@@ -299,7 +299,6 @@ function ttl(e) {
 }
 
 function formTtl(e) {
-  console.log(e)
   if (e.key == 'Enter') {
     chgTtl()
   }
@@ -316,11 +315,11 @@ function chgTtl() {
     if (cont[i].id == env.currItm.id) {
       cont[i].shTtl = shTtl.value
       cont[i].lgTtl = lgTtl.value
+      chgEl(cont[i])
       break
     }
   }
   localStorage.cont = JSON.stringify(cont)
-  chgEl(env.currItm)
 }
 
 function hideParent(e) {
@@ -336,11 +335,12 @@ function chgEl(elItm) {
     grid.removeChild(prevTtlWin)
   }
 
-  var el =  document.getElementById(elItm.id)
-  // var p =
+  var el = document.getElementById(elItm.id)
+  var shTtl = el.getElementsByClassName('title')[0]
   // var typ =
   var imgFile
   if (elItm.typ == 'none') {
     imgFile = 'Knob-Help.ico'
+  shTtl.innerHTML = elItm.shTtl
   }
 }
