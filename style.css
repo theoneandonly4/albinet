@@ -18,15 +18,15 @@
 }
 
 #grid td.input {
-  background-color: lightgreen;
+  background-color: lightskyblue;
 }
 
 #grid td.output {
-  background-color: red;
+  background-color: lightgreen;
 }
 
 #grid td.focus {
-  background-color: lightskyblue;
+  background-color: lightcoral;
 }
 
 #grid td #title {

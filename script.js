@@ -1,9 +1,10 @@
 //Object Constructors
-function Element(prt,id,typ,ttl) {
+function Element(prt,id,typ,shTtl,lgTtl) {
   this.prt = prt
   this.id =  id
   this.typ = typ
-  this.ttl = ttl
+  this.shTtl = shTtl
+  this.lgTtl = lgTtl
 }
 
 //Execution
@@ -41,8 +42,8 @@ function grid() {
   var gridCols = 9
 
   //Update body and cell size depending on window size
-  var width =  window.innerWidth
-  var height = window.innerHeight
+  // var width =  window.innerWidth
+  // var height = window.innerHeight
 
   cellSide = 50
   document.body.style.width =  cellSide * gridCols + 'px'
@@ -129,9 +130,9 @@ function cellClick(e) {
     switch (e.button) {
       case 1:
         break;
-      case 0:
-        creEl(e.target.id)
       case 2:
+        creEl(e.target.id)
+      case 0:
       default:
       if (focus.length == 1) {
         focus[0].classList.remove('focus')
@@ -155,10 +156,13 @@ function cellClick(e) {
 function creEl(elId) {
   var env =   JSON.parse(localStorage.env)
   var cont =  JSON.parse(localStorage.cont)
-  var elItm = new Element(env.prt, elId, 'none', 'New El')
+  var elItm = new Element(env.prt, elId, 'none', 'New El','New Element')
 
   cont.push(elItm)
   localStorage.cont = JSON.stringify(cont)
+
+  env.currItm = elItm
+  localStorage.env = JSON.stringify(env)
 
   //Item Display
   disEl(elItm)
@@ -168,7 +172,7 @@ function creEl(elId) {
 function disEl(elItm) {
   var el =  document.getElementById(elItm.id)
   var p =   document.createElement('p')
-  var img = document.createElement('img')
+  var typ = document.createElement('img')
   var imgFile
   var inp = document.createElement('img')
   var out = document.createElement('img')
@@ -177,27 +181,52 @@ function disEl(elItm) {
   }
 
   p.id =        'title'
-  p.innerHTML = elItm.ttl
+  p.innerHTML = elItm.shTtl
   p.addEventListener('mouseup', ttl)
 
-  inp.setAttribute('src', './src/img/Knob-Green.ico')
+  inp.setAttribute('src', './src/img/Knob-Blue.ico')
   inp.style.width =  '8px'
   inp.style.height = '8px'
 
-  img.setAttribute('src', './src/img/' + imgFile)
+  typ.id = 'typ'
+  typ.setAttribute('src', './src/img/' + imgFile)
 
-  out.setAttribute('src', './src/img/Knob-Red.ico')
+  out.setAttribute('src', './src/img/Knob-Green.ico')
   out.style.width =  '8px'
   out.style.height = '8px'
 
   el.appendChild(p)
   el.appendChild(inp)
-  el.appendChild(img)
+  el.appendChild(typ)
   el.appendChild(out)
 }
 
 function ttl(e) {
+
+  var focus = document.getElementsByClassName('focus')
   var grid = document.getElementById('grid')
+  var el =          document.getElementById(e.target.parentNode.id)
+  var rect =        el.getBoundingClientRect()
+  var ttlWin =      document.createElement('div')
+  var lblShTtl =    document.createElement('label')
+  var lblShTtlTxt = document.createTextNode('Short Desc')
+  var shTtl =       document.createElement('input')
+  var lblLgTtl =    document.createElement('label')
+  var ok =          document.createElement('img')
+  var ccl =         document.createElement('img')
+  var br =          document.createElement('br')
+  var lblLgTtlTxt = document.createTextNode('Desc')
+  var lgTtl =       document.createElement('input')
+  var cont =        JSON.parse(localStorage.cont)
+  var env =         JSON.parse(localStorage.env)
+  var elItm
+  var i
+
+  //Set Focus
+  if (focus.length == 1) {
+    focus[0].classList.remove('focus')
+  }
+  el.classList.add('focus')
 
   //Remove existing title edition window if it already exists
   var prevTtlWin = document.getElementById('ttlWin')
@@ -205,15 +234,21 @@ function ttl(e) {
     grid.removeChild(prevTtlWin)
   }
 
-  var el =          document.getElementById(e.target.parentNode.id)
-  var rect =        el.getBoundingClientRect()
-  var ttlWin =      document.createElement('div')
-  var lblShTtl =    document.createElement('label')
-  var lblShTtlTxt = document.createTextNode('Short Title')
-  var shTtl =       document.createElement('input')
-  var lblLgTtl =    document.createElement('label')
-  var lblLgTtlTxt = document.createTextNode('Short Title')
-  var lgTtl =       document.createElement('input')
+  //Get Element from localStorage
+  for (i = 0; i < cont.length; i++) {
+    if (cont[i].id == el.id) {
+      elItm = cont[i]
+    }
+  }
+
+  //Set Environment Current Item
+  env.currItm = elItm
+  localStorage.env = JSON.stringify(env)
+
+  //Check Right Click before display title Window
+  if (e.button != 2) {
+    return false
+  }
 
   ttlWin.id =             'ttlWin'
   ttlWin.style.position = 'absolute'
@@ -225,18 +260,87 @@ function ttl(e) {
   shTtl.id =         'shTtl'
   shTtl.setAttribute('type', 'text')
   shTtl.setAttribute('name', 'shTtl')
+  shTtl.setAttribute('value', elItm.shTtl)
   shTtl.setAttribute('size', '6')
   shTtl.setAttribute('maxlength', '6')
-  shTtl.addEventListener('keypress', formKey)
+  shTtl.addEventListener('keypress', formTtl)
+
+  ok.setAttribute('src', './src/img/Knob-Valid-Green.ico')
+  ok.style.width =  '20px'
+  ok.style.height = '20px'
+  ok.addEventListener('click', chgTtl)
+
+  ccl.setAttribute('src', './src/img/Knob-Cancel.ico')
+  ccl.style.width =  '20px'
+  ccl.style.height = '20px'
+  ccl.addEventListener('click', hideParent)
+
+  lblLgTtl.setAttribute('for', 'lgTtl')
+
+  lgTtl.id =         'lgTtl'
+  lgTtl.setAttribute('type', 'text')
+  lgTtl.setAttribute('name', 'lgTtl')
+  lgTtl.setAttribute('value', elItm.lgTtl)
+  lgTtl.setAttribute('size', '20')
+  lgTtl.setAttribute('maxlength', '20')
+  lgTtl.addEventListener('keypress', formTtl)
 
   lblShTtl.appendChild(lblShTtlTxt)
   ttlWin.appendChild(lblShTtl)
   ttlWin.appendChild(shTtl)
-
+  ttlWin.appendChild(ok)
+  ttlWin.appendChild(ccl)
+  ttlWin.appendChild(br)
+  lblLgTtl.appendChild(lblLgTtlTxt)
+  ttlWin.appendChild(lblLgTtl)
+  ttlWin.appendChild(lgTtl)
 
   grid.appendChild(ttlWin)
 }
 
-function formKey(e) {
+function formTtl(e) {
   console.log(e)
+  if (e.key == 'Enter') {
+    chgTtl()
+  }
+}
+
+function chgTtl() {
+  var cont =  JSON.parse(localStorage.cont)
+  var env =   JSON.parse(localStorage.env)
+  var shTtl = document.getElementById('shTtl')
+  var lgTtl = document.getElementById('lgTtl')
+  var i
+
+  for (i = 0; i < cont.length; i++) {
+    if (cont[i].id == env.currItm.id) {
+      cont[i].shTtl = shTtl.value
+      cont[i].lgTtl = lgTtl.value
+      break
+    }
+  }
+  localStorage.cont = JSON.stringify(cont)
+  chgEl(env.currItm)
+}
+
+function hideParent(e) {
+  parent = document.getElementById(e.target.parentNode.id)
+  parent.parentNode.removeChild(parent)
+}
+
+function chgEl(elItm) {
+  var grid = document.getElementById('grid')
+  //Remove existing title edition window if it already exists
+  var prevTtlWin = document.getElementById('ttlWin')
+  if (prevTtlWin != null) {
+    grid.removeChild(prevTtlWin)
+  }
+
+  var el =  document.getElementById(elItm.id)
+  // var p =
+  // var typ =
+  var imgFile
+  if (elItm.typ == 'none') {
+    imgFile = 'Knob-Help.ico'
+  }
 }
