@@ -19,6 +19,9 @@ function main() {
 
 //Environment Variables initialization function
 function init() {
+  var env
+  var cont
+  var typList
   if (!localStorage.env) {
     env = {prt: 'main'}
     localStorage.env = JSON.stringify(env)
@@ -27,6 +30,12 @@ function init() {
     cont = []
     localStorage.cont = JSON.stringify(cont)
   }
+  //TODO change list below to fetch from DataBase
+  typList = {
+
+  }
+
+
 }
 
 //Grid creation function
@@ -190,6 +199,7 @@ function disEl(elItm) {
 
   typ.classList.add('typ')
   typ.setAttribute('src', './src/img/' + imgFile)
+  typ.addEventListener('mouseup', typ)
 
   out.setAttribute('src', './src/img/Knob-Green.ico')
   out.style.width =  '8px'
@@ -201,6 +211,7 @@ function disEl(elItm) {
   el.appendChild(out)
 }
 
+//Change Short and Long titles
 function ttl(e) {
 
   var focus = document.getElementsByClassName('focus')
@@ -342,5 +353,48 @@ function chgEl(elItm) {
   if (elItm.typ == 'none') {
     imgFile = 'Knob-Help.ico'
   shTtl.innerHTML = elItm.shTtl
+  }
+}
+
+//Change type
+function typ(e) {
+
+  var focus = document.getElementsByClassName('focus')
+  var grid = document.getElementById('grid')
+  var el =          document.getElementById(e.target.parentNode.id)
+  var rect =        el.getBoundingClientRect()
+  var typWin =      document.createElement('div')
+  var br =          document.createElement('br')
+  var cont =        JSON.parse(localStorage.cont)
+  var env =         JSON.parse(localStorage.env)
+  var elItm
+  var i
+
+  //Set Focus
+  if (focus.length == 1) {
+    focus[0].classList.remove('focus')
+  }
+  el.classList.add('focus')
+
+  //Remove existing title edition window if it already exists
+  var prevTyplWin = document.getElementById('typWin')
+  if (prevTtlWin != null) {
+    grid.removeChild(prevTypWin)
+  }
+
+  //Get Element from localStorage
+  for (i = 0; i < cont.length; i++) {
+    if (cont[i].id == el.id) {
+      elItm = cont[i]
+    }
+  }
+
+  //Set Environment Current Item
+  env.currItm = elItm
+  localStorage.env = JSON.stringify(env)
+
+  //Check Right Click before display title Window
+  if (e.button != 2) {
+    return false
   }
 }
