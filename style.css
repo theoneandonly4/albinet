@@ -17,6 +17,14 @@
   min-height: 50px;
 }
 
+#grid td.colrow {
+  background-color: teal;
+}
+
+#grid td.corner {
+  background-color: teal;
+}
+
 #grid td.input {
   background-color: lightskyblue;
 }

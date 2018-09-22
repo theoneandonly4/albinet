@@ -12,9 +12,16 @@ main()
 
 //Main function
 function main() {
+  //Remove Context Menu default behavior (right click)
+  document.body.addEventListener('contextmenu', function(e) {
+    e.preventDefault()
+    return false
+  })
+
   init()
   grid()
   disp()
+  save()
 }
 
 //Environment Variables initialization function
@@ -23,38 +30,34 @@ function init() {
   var cont
   var typList
   if (!localStorage.env) {
-    env = {prt: 'main'}
+    env = {
+      prt: 'main',
+      lines: 3,
+      cols: 5,
+      cell: 50
+    }
     localStorage.env = JSON.stringify(env)
   }
   if (!localStorage.cont) {
     cont = []
     localStorage.cont = JSON.stringify(cont)
   }
-  //TODO change list below to fetch from DataBase
   typList = {
-
+// TODO: define default element types
+// TODO: change list to fetch from DataBase
   }
-
 
 }
 
 //Grid creation function
 function grid() {
-  //Remove Context Menu default behavior (right click)
-  document.body.addEventListener('contextmenu', function(e) {
-    e.preventDefault()
-    return false
-  })
+  var env = JSON.parse(localStorage.env)
 
   //Grid size
-  var gridLines = 9
-  var gridCols = 9
-
-  //Update body and cell size depending on window size
-  // var width =  window.innerWidth
-  // var height = window.innerHeight
-
-  cellSide = 50
+  var gridLines = env.lines
+  var gridCols = env.cols
+  var cellSide = env.cell
+  var halfCellSide = Math.floor(cellSide / 2)
   document.body.style.width =  cellSide * gridCols + 'px'
   document.body.style.height = cellSide * gridLines + 'px'
 
@@ -62,26 +65,89 @@ function grid() {
   var grid = document.createElement('table')
   grid.id = 'grid'
 
-  grid.style.padding = cellSide / 2 + 'px'
-
   var i, j
-  for (i = 0; i < gridLines; i++) {
+  for (i = 0; i < gridLines + 2; i++) {
     var row = document.createElement('tr')
     row.style.width =  cellSide * gridCols  + 'px'
     row.style.height = cellSide + 'px'
 
-    for (j = 0; j < gridCols; j++) {
+    for (j = 0; j < gridCols + 2; j++) {
       var cell = document.createElement('td')
-      cell.id = 'c(' + i + ',' + j + ')'
       cell.style.width =  cellSide + 'px'
       cell.style.height = cellSide + 'px'
-      if(j == 0) {
-        cell.classList.add('input')
+
+      switch (i) {
+        case 0:
+          switch (j) {
+            case 0:
+              cell.id = 'topleft'
+              cell.classList.add('corner')
+              break
+
+            default:
+              cell.id = 'col(' + j + ')'
+              cell.classList.add('colrow')
+              break
+
+            case gridCols + 1:
+              cell.id = 'topright'
+              cell.classList.add('corner')
+              break
+          }
+          break
+
+        default:
+          switch (j) {
+            case 0:
+              cell.id = 'row(' + i + ')'
+              cell.classList.add('colrow')
+              break
+
+            case 1:
+            cell.classList.add('input')
+              cell.id = 'c(' + i + ',' + j + ')'
+              cell.addEventListener('mouseup', cellClick)
+              break
+
+            default:
+              cell.id = 'c(' + i + ',' + j + ')'
+              cell.addEventListener('mouseup', cellClick)
+              break
+
+            case gridCols:
+              cell.classList.add('output')
+              cell.id = 'c(' + i + ',' + j + ')'
+              cell.addEventListener('mouseup', cellClick)
+              break
+
+            case gridCols + 1:
+              cell.id = 'row(' + i + ')'
+              cell.classList.add('colrow')
+              break
+
+          }
+          break
+
+        case gridLines + 1:
+          switch (j) {
+            case 0:
+              cell.id = 'botleft'
+              cell.classList.add('corner')
+              break
+
+            default:
+              cell.id = 'col(' + j + ')'
+              cell.classList.add('colrow')
+              break
+
+            case gridCols + 1:
+              cell.id = 'botright'
+              cell.classList.add('corner')
+              break
+          }
+          break
+
       }
-      if (j == gridCols - 1) {
-        cell.classList.add('output')
-      }
-      cell.addEventListener('mouseup', cellClick)
       row.appendChild(cell)
     }
 
@@ -97,6 +163,44 @@ function disp() {
   for (i = 0; i < cont.length; i++) {
     disEl(cont[i])
   }
+}
+
+function save() {
+  // TODO: Implement save functionality to local JSON File > https://codepen.io/davidelrizzo/pen/cxsGb
+  // TODO: Implement save functionality to DB
+  // TODO: Display save status in topleft corner
+}
+
+function cons() {
+  // TODO: Display botleft alerts from UI + Server + AI
+  // TODO: Make cell float if it is outside of viewport
+}
+
+function plan() {
+  // TODO: Display topright time, work and calendar
+  // TODO: Work elements and events creation
+  // TODO: Make cell float if it is outside of viewport
+}
+
+function comm() {
+  // TODO: Display Announcements
+  // TODO: Make cell float if it is outside of viewport
+}
+
+function addRow() {
+
+}
+
+function delRow() {
+
+}
+
+function addCol() {
+
+}
+
+function delCol() {
+
 }
 
 //Clicks in Grid function
@@ -175,6 +279,10 @@ function creEl(elId) {
 
   //Item Display
   disEl(elItm)
+}
+
+function delEl() {
+  
 }
 
 //Element display in Cell function

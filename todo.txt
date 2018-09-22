@@ -12,11 +12,19 @@ TODO> Get Elements from DataBase
 Done> Get Elements from Local Storage
 Done> Display Elements from Local Storage
 Done> Create New Elements
-TODO> Edit Element Title Data
+Done> Edit Element Title Data
 TODO> Edit Element Type
 TODO> Edit Element Links
 TODO> Move Element
 TODO> Copy Paste Element (already positioned in code)
+TODO> Remove/add lines/rows
+TODO> Expand / collapse Element
 TODO> Local Storage to JSON format
 TODO> Save JSON to Local File
 TODO> Save JSON to DataBase
+TODO> Implement keyboard controls / nav with arrows and ZQSD, add/remove/move, c/p, ct/p
+TODO> Implement undo / redo
+
+TODO> Implement Cockpit
+TODO> Implement Dev / Tst / Prd main environments + temporary test environments as cp of Prd
+TODO> Implement Automatic test scripts for non-reg and future development
