@@ -169,6 +169,7 @@ function save() {
   // TODO: Implement save functionality to local JSON File > https://codepen.io/davidelrizzo/pen/cxsGb
   // TODO: Implement save functionality to DB
   // TODO: Display save status in topleft corner
+  // TODO: User HTML5 Web Workers for periodic saving
 }
 
 function cons() {
@@ -282,7 +283,7 @@ function creEl(elId) {
 }
 
 function delEl() {
-  
+
 }
 
 //Element display in Cell function
@@ -307,7 +308,7 @@ function disEl(elItm) {
 
   typ.classList.add('typ')
   typ.setAttribute('src', './src/img/' + imgFile)
-  typ.addEventListener('mouseup', typ)
+  typ.addEventListener('mouseup', type)
 
   out.setAttribute('src', './src/img/Knob-Green.ico')
   out.style.width =  '8px'
@@ -351,6 +352,12 @@ function ttl(e) {
   var prevTtlWin = document.getElementById('ttlWin')
   if (prevTtlWin != null) {
     grid.removeChild(prevTtlWin)
+  }
+
+  //Remove existing type edition window if it already exists
+  var prevTypWin = document.getElementById('typWin')
+  if (prevTypWin != null) {
+    grid.removeChild(prevTypWin)
   }
 
   //Get Element from localStorage
@@ -465,16 +472,15 @@ function chgEl(elItm) {
 }
 
 //Change type
-function typ(e) {
-
-  var focus = document.getElementsByClassName('focus')
-  var grid = document.getElementById('grid')
-  var el =          document.getElementById(e.target.parentNode.id)
-  var rect =        el.getBoundingClientRect()
-  var typWin =      document.createElement('div')
-  var br =          document.createElement('br')
-  var cont =        JSON.parse(localStorage.cont)
-  var env =         JSON.parse(localStorage.env)
+function type(e) {
+  var focus =  document.getElementsByClassName('focus')
+  var grid =   document.getElementById('grid')
+  var el =     document.getElementById(e.target.parentNode.id)
+  var rect =   el.getBoundingClientRect()
+  var typWin = document.createElement('div')
+  var br =     document.createElement('br')
+  var cont =   JSON.parse(localStorage.cont)
+  var env =    JSON.parse(localStorage.env)
   var elItm
   var i
 
@@ -485,8 +491,14 @@ function typ(e) {
   el.classList.add('focus')
 
   //Remove existing title edition window if it already exists
-  var prevTyplWin = document.getElementById('typWin')
+  var prevTtlWin = document.getElementById('ttlWin')
   if (prevTtlWin != null) {
+    grid.removeChild(prevTtlWin)
+  }
+
+  //Remove existing type edition window if it already exists
+  var prevTypWin = document.getElementById('typWin')
+  if (prevTypWin != null) {
     grid.removeChild(prevTypWin)
   }
 
