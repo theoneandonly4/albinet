@@ -188,19 +188,25 @@ function comm() {
   // TODO: Make cell float if it is outside of viewport
 }
 
-function addRow() {
+function addRows(row, num) {
+ var i, j
+ var env = JSON.parse(localStorage.env)
+
+ var gridLines = env.lines
+ var gridCols = env.cols
+
 
 }
 
-function delRow() {
+function delRows(row, num) {
 
 }
 
-function addCol() {
+function addCols(col, num) {
 
 }
 
-function delCol() {
+function delCols(col, num) {
 
 }
 
@@ -282,14 +288,33 @@ function creEl(elId) {
   disEl(elItm)
 }
 
-function delEl() {
+function delEl(elId) {
+//Remove Element from localStorage
+  var cont =  JSON.parse(localStorage.cont)
+  var i
 
+  for (i = 0; i < cont.length; i++) {
+    if (cont[i].id == elId) {
+      cont.splice(i, 1)
+    }
+  }
+
+  localStorage.cont = JSON.stringify(cont)
+
+  var el =  document.getElementById(elId)
+
+  var nodes = el.childNodes
+  var max = nodes.length
+  for (i = 0; i < max; i++) {
+    el.removeChild(nodes[0])
+  }
 }
 
 //Element display in Cell function
 function disEl(elItm) {
   var el =  document.getElementById(elItm.id)
   var p =   document.createElement('p')
+  var del = document.createElement('img')
   var typ = document.createElement('img')
   var imgFile
   var inp = document.createElement('img')
@@ -302,6 +327,13 @@ function disEl(elItm) {
   p.innerHTML = elItm.shTtl
   p.addEventListener('mouseup', ttl)
 
+  del.classList.add('del')
+  del.setAttribute('src', './src/img/Knob-Cancel.ico')
+  del.style.width =  '8px'
+  del.style.height = '8px'
+  del.addEventListener('mouseup', delClick)
+
+  inp.classList.add('link')
   inp.setAttribute('src', './src/img/Knob-Blue.ico')
   inp.style.width =  '8px'
   inp.style.height = '8px'
@@ -310,10 +342,12 @@ function disEl(elItm) {
   typ.setAttribute('src', './src/img/' + imgFile)
   typ.addEventListener('mouseup', type)
 
+  out.classList.add('link')
   out.setAttribute('src', './src/img/Knob-Green.ico')
   out.style.width =  '8px'
   out.style.height = '8px'
 
+  p.appendChild(del)
   el.appendChild(p)
   el.appendChild(inp)
   el.appendChild(typ)
@@ -322,6 +356,10 @@ function disEl(elItm) {
 
 //Change Short and Long titles
 function ttl(e) {
+
+  if (e.target.className == 'del') {
+    return false
+  }
 
   var focus = document.getElementsByClassName('focus')
   var grid = document.getElementById('grid')
@@ -517,4 +555,31 @@ function type(e) {
   if (e.button != 2) {
     return false
   }
+
+}
+
+function delClick(e) {
+  var focus =  document.getElementsByClassName('focus')
+  var grid =   document.getElementById('grid')
+  var el =     document.getElementById(e.target.parentNode.parentNode.id)
+
+  //Set Focus
+  if (focus.length == 1) {
+    focus[0].classList.remove('focus')
+  }
+  el.classList.add('focus')
+
+  //Remove existing title edition window if it already exists
+  var prevTtlWin = document.getElementById('ttlWin')
+  if (prevTtlWin != null) {
+    grid.removeChild(prevTtlWin)
+  }
+
+  //Remove existing type edition window if it already exists
+  var prevTypWin = document.getElementById('typWin')
+  if (prevTypWin != null) {
+    grid.removeChild(prevTypWin)
+  }
+
+  delEl(el.id)
 }
